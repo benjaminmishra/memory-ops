@@ -70,7 +70,7 @@ def _load_model() -> Tuple[AutoModelForCausalLM, AutoTokenizer, List[Tuple[int, 
             config = model.peft_config
             rh = config.get("retrieval_heads")  # type: ignore[attr-defined]
             if isinstance(rh, (list, tuple)):
-                retrieval_heads = [(int(l), int(h)) for l, h in rh]
+                retrieval_heads = [(int(layer), int(head)) for layer, head in rh]
         except Exception:
             pass
     return model, tokenizer, retrieval_heads

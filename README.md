@@ -73,6 +73,7 @@ Configuration is provided via environment variables.  See
 | `UPSTREAM_BASE`      | Base URL of the upstream LLM provider                |
 | `UPSTREAM_MODEL`     | Default model name to call upstream                  |
 | `UPSTREAM_API_KEY`   | Fallback API key for upstream calls                  |
+| `GOOGLE_CLIENT_ID`   | OAuth client ID for Google Sign-In validation         |
 | `TOP_K`              | Number of tokens to keep after compression           |
 | `RATE_LIMIT_TPM`     | Tokens‑per‑minute budget per API key                 |
 | `LORA_ID`            | HuggingFace ID or local path to LoRA weights         |
@@ -123,6 +124,35 @@ the FastAPI server.  Build and run the image as follows:
 ```bash
 docker build -t memory-ops:latest .
 docker run -p 8000:8000 -e API_KEYS="my-key" -e UPSTREAM_API_KEY="sk-..." memory-ops:latest
+```
+
+## Deploy to Fly.io
+
+1. Install and authenticate Flyctl:
+```bash
+curl -L https://fly.io/install.sh | sh
+fly auth login
+```
+2. Generate an app config (does not deploy yet):
+```bash
+fly launch --name memory-ops --image-name memory-ops --no-deploy
+```
+Edit `fly.toml` to set environment variables and mounts.
+3. Create a volume for persistent storage:
+```bash
+fly volumes create db_storage --region <region> --size 1
+```
+4. Set required secrets:
+```bash
+fly secrets set API_KEYS=... UPSTREAM_BASE=https://api.openai.com   UPSTREAM_API_KEY=... GOOGLE_CLIENT_ID=...
+```
+5. Deploy:
+```bash
+fly deploy --ha=false
+```
+After deployment, test the API:
+```bash
+curl -H "X-API-Key: your-key" -X POST https://<app-name>.fly.dev/v1/chat/completions   -H "Content-Type: application/json"   -d '{"model":"gpt-4o-mini","messages":[{"role":"user","content":"Hello"}]}'
 ```
 
 ## GitHub Actions

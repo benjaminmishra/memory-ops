@@ -5,8 +5,8 @@ defaults defined here are sensible for local development.  In production
 environments you should override these values via environment variables.
 """
 from functools import lru_cache
-import os
-from pydantic import BaseSettings, Field
+from pydantic_settings import BaseSettings
+from pydantic import Field
 
 
 class Settings(BaseSettings):
