@@ -12,7 +12,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -r requirements.txt
-      - run: pip install flyctl
+      - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: |
           echo "$FLY_API_TOKEN" | flyctl auth login --access-token -
           flyctl deploy --remote-only --ha=false
