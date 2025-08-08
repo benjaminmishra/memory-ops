@@ -17,7 +17,7 @@ Usage example::
 
 """
 
-from fastapi import Depends, Header, HTTPException, status
+from fastapi import Header, HTTPException, status
 from typing import Optional
 
 from .config import get_settings

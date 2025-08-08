@@ -26,12 +26,12 @@ to report compression metrics.
 
 from typing import Any, Dict, List, Optional
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response, status
+from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response
 from fastapi.responses import JSONResponse, StreamingResponse
-import asyncio
+import json
 
 from .auth import get_current_identity
-from .rate_limit import get_rate_limiter, RateLimiter
+from .rate_limit import get_rate_limiter
 from .compression import compress
 from .memory import add_message, get_context
 from .upstream import call_llm
